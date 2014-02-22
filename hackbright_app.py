@@ -23,6 +23,12 @@ def make_new_student(first_name, last_name, github):
     CONN.commit()
     print "Successfully added student: %s %s with github t%s" % (first_name, last_name, github)
 
+def give_student_grade(student_github, project_title, grade):
+    query = """INSERT into Grades values (?, ?, ?)"""
+    DB.execute(query, (student_github, project_title, grade))
+    CONN.commit()
+    print "Gave %s grade %s on %s project." % (student_github, grade, project_title)
+
 def get_project_by_title(title):
     query = """SELECT title, description, max_grade FROM Projects WHERE title = ?"""
     DB.execute(query, (title,))
@@ -32,7 +38,19 @@ Project Title: %s
 Project Decription: %s
 Maximum Grade: %d"""%(row[0], row[1], row[2])
 
+def get_grade_by_student_project(last_name,title):
+    query = """SELECT first_name, last_name, grade, title FROM reportcardview WHERE last_name = ? AND title = ?"""
+    DB.execute(query, (last_name,title))
+    row = DB.fetchone()
+    print row
+    print """%s %s got a grade of %s on the %s project"""%(row[0], row[1], row[2], row[3])
 
+def get_all_grades(last_name):
+    query = """SELECT first_name, last_name, grade, title FROM reportcardview WHERE last_name = ?"""
+    DB.execute(query, (last_name,))
+    row = DB.fetchall()
+    for i in range(len(row)):
+        print """%s %s got a grade of %s on the %s project"""%(row[i][0], row[i][1], row[i][2], row[i][3])
 
 def connect_to_db():
     global DB, CONN
@@ -43,8 +61,10 @@ def main():
     connect_to_db()
     command = None
     while command != "quit":
+        print "Type your command||arguments split||by double pipes"
         input_string = raw_input("HBA Database> ")
-        tokens = input_string.split()
+        tokens = input_string.split("||")
+        print tokens
         command = tokens[0]
         args = tokens[1:]
 
@@ -56,6 +76,12 @@ def main():
             make_new_student(*args)
         elif command == "new_project":
             add_project(*args)
+        elif command == "student_grade":
+            get_grade_by_student_project(*args)
+        elif command == "assign_grade":
+            give_student_grade(*args)
+        elif command == "all_grades":
+            get_all_grades(*args)
 
     CONN.close()
 
