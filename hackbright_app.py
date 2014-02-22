@@ -4,12 +4,11 @@ DB = None
 CONN = None
 
 def get_student_by_github(github):
+    print "%r" % github
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
     DB.execute(query, (github,))
     row = DB.fetchone()
-    print """\
-Student: %s %s
-Github account: %s"""%(row[0], row[1], row[2])
+    return row
 
 def add_project(title, description, max_grade):
     query = """INSERT into Projects (title, description, max_grade) VALUES (?, ?, ?)"""
