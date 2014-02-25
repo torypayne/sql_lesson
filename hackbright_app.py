@@ -38,13 +38,13 @@ Project Decription: %s
 Maximum Grade: %d"""%(row[0], row[1], row[2])
 
 def all_project_grades(title):
-    query = """SELECT first_name,last_name, grade FROM reportcardview WHERE title = ?"""
+    query = """SELECT first_name,last_name, grade, github FROM reportcardview WHERE title = ?"""
     DB.execute(query, (title,))
     row = DB.fetchall()
     grades = {}
     for i in range(len(row)):
         name = row[i][0]+" "+row[i][1]
-        grades[name] = row[i][2]
+        grades[name] = [row[i][3], row[i][2]]
     print grades
     return grades
 
