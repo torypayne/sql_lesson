@@ -1,5 +1,6 @@
 <html>
 <body>
+<a href="/">Home</a> | <a href="/add_student">Add New Student</a> | <a href="/add_project">Add New Project</a>    
 <h1>Hackbright Academy Student Directory<h1>
 
 <h2><b>Student Information</b></h2>
@@ -8,12 +9,12 @@
 <b>Personal Evaluation:</b> <p>All Hackbright students are awesome, so she is clearly awesome.</p>
 
 <h2>Grades</h2>
-
+<a href="/add_grade">Add New Grade</a><br><br>
 {% for key, value in grades.iteritems() %}
-  <p>Project: <a href="/project?project={{key}}">{{key}}</a> <br> Grade: {{value}} 
+  <p><strong>Project:</strong> <a href="/project?project={{key}}">{{key}}</a> <br> <strong>Grade:</strong> {{value}} 
     <br><br></p>
 {% endfor %}
 
-<a href="/">Home</a>
+
 </body>
 </html>

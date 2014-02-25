@@ -65,5 +65,22 @@ def project_added():
                                                 max_grade=max_grade)
     return html
 
+@app.route("/add_grade")
+def add_grade():
+    hackbright_app.connect_to_db()
+    html = render_template("new_grade.html")    
+    return html
+
+@app.route("/grade_added")
+def grade_added():
+    hackbright_app.connect_to_db()
+    github = request.args.get("github")
+    title =  request.args.get("title") 
+    grade = request.args.get("grade")
+    hackbright_app.give_student_grade(github, title, grade)
+    html = render_template("grade_added.html", github=github, title=title, 
+                                                grade=grade)
+    return html
+
 if __name__ == "__main__":
     app.run(debug=True)
