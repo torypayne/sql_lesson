@@ -8,7 +8,7 @@ def get_student_by_github(github):
     query = """SELECT first_name, last_name, github FROM Students WHERE github = ?"""
     DB.execute(query, (github,))
     row = DB.fetchone()
-    return row
+    return {'first_name': row[0], 'last_name': row[1], 'github': row[2] }
 
 def add_project(title, description, max_grade):
     query = """INSERT into Projects (title, description, max_grade) VALUES (?, ?, ?)"""
@@ -37,6 +37,17 @@ Project Title: %s
 Project Decription: %s
 Maximum Grade: %d"""%(row[0], row[1], row[2])
 
+def all_project_grades(title):
+    query = """SELECT first_name,last_name, grade FROM reportcardview WHERE title = ?"""
+    DB.execute(query, (title,))
+    row = DB.fetchall()
+    grades = {}
+    for i in range(len(row)):
+        name = row[i][0]+" "+row[i][1]
+        grades[name] = row[i][2]
+    print grades
+    return grades
+
 def get_grade_by_student_project(last_name,title):
     query = """SELECT first_name, last_name, grade, title FROM reportcardview WHERE last_name = ? AND title = ?"""
     DB.execute(query, (last_name,title))
@@ -48,8 +59,12 @@ def get_all_grades(last_name):
     query = """SELECT first_name, last_name, grade, title FROM reportcardview WHERE last_name = ?"""
     DB.execute(query, (last_name,))
     row = DB.fetchall()
+    grades = {}
     for i in range(len(row)):
-        print """%s %s got a grade of %s on the %s project"""%(row[i][0], row[i][1], row[i][2], row[i][3])
+        # print """%s %s got a grade of %s on the %s project"""%(row[i][0], row[i][1], row[i][2], row[i][3])
+        grades[row[i][3]] = row[i][2]
+        # print grades
+    return grades
 
 def connect_to_db():
     global DB, CONN
@@ -81,6 +96,8 @@ def main():
             give_student_grade(*args)
         elif command == "all_grades":
             get_all_grades(*args)
+        elif command == "project_grades":
+            all_project_grades(*args)
 
     CONN.close()
 
